@@ -4,7 +4,8 @@
 **CMake Build instructions**
 
 -----
-  - Out-of-source build :
+ ***WARNING : NVIDIA driver is hardcoded in CMakeLists.txt***
+ - Out-of-source build :
  ```
 git clone git@github.com:Modelisation5ETI/TP8_Texture.git && \
 mkdir TP8_Texture-build && cd TP8_Texture-build  && \
