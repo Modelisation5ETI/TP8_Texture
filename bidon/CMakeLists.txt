@@ -22,11 +22,12 @@ find_package( OpenGL REQUIRED )
 # add_executable sources
 file(GLOB SRC ${SRC_DIR}/*.[ch]*)
 file(GLOB LIB ${LIB_DIR}/*.[ch]*)
+file(GLOB SHADER ${SHADER_DIR}/*.vert ${SHADER_DIR}/*.frag)
 
 include_directories( ${SRC_DIR} ${LIB_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
 
 # Specify g++ option
 add_definitions( -O2 -Wall -Wextra -std=c++11 -Wno-comment -DCORRECTION)
 
-add_executable( ${PROJECT_NAME} ${SRC} ${LIB} )
+add_executable( ${PROJECT_NAME} ${SRC} ${LIB} ${SHADER} )
 target_link_libraries( ${PROJECT_NAME} -L/usr/lib/nvidia-304/ -lm -ldl -lglut -lGLEW ${OPENGL_LIBRARIES} -pthread )
