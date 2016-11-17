@@ -9,6 +9,6 @@ out vec3 vf_position;
 
 void main(void)
 {
-  gl_Position = projection * vec4(position, 1.0);
+  gl_Position = projection * vec4(position.x,position.y+5.3,position.z, 1.0);
   vf_position = position;
 }

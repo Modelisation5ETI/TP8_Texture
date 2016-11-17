@@ -4,9 +4,13 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+#include <sstream>
+#include <iostream>
+
 #include "shader.h"
 #include "texture.h"
 #include "vec3.h"
+
 
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*)nullptr + (bytes))
@@ -22,7 +26,24 @@ static Shader *stone_shader = nullptr;
 static unsigned stone_nb_indices;
 static GLuint  stone_texture;
 
+std::vector<GLuint> caustic_texture;
+unsigned int current_caustic=0;
+
 static float angle = 0;
+
+void load_caustic_texture()
+{
+unsigned int nb_caustic = 32;
+for (unsigned int i=0;i<nb_caustic;i++)
+  {
+  std::string filename="caust";
+  std::stringstream caustic;
+  caustic<<i;
+  filename+=caustic.str()+".ppm";
+  std::cout<<filename<<std::endl;
+  caustic_texture.push_back(get_texture(filename));
+  }
+}
 
 /*=========================================================================*\
  * init                                                                    *
@@ -143,7 +164,11 @@ static void init()
     stone_shader->link();
     stone_shader->activate();
     stone_shader->set("tex", 0);
+    stone_shader->set("caustic_tex", 1);
     stone_texture = get_texture("stone.ppm");
+
+    load_caustic_texture();
+
   }
 }
 
@@ -162,17 +187,28 @@ static void display_callback()
   glClearColor(0.5, 0.6, 0.7, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
-  // Dessin du sol
-  glBindVertexArray(ground_vao);
-  ground_shader->activate();
-  ground_shader->set("projection", projection * view);
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+
   // Dessin du caillou
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, stone_texture);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, caustic_texture[current_caustic]);
+  current_caustic=(current_caustic+1)%caustic_texture.size();
   glBindVertexArray(stone_vao);
   stone_shader->activate();
   stone_shader->set("projection", projection * view);
   glDrawElements(GL_TRIANGLES, stone_nb_indices, GL_UNSIGNED_SHORT, nullptr);
+
+  // Dessin du sol
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  glBindVertexArray(ground_vao);
+  ground_shader->activate();
+  ground_shader->set("projection", projection * view);
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+
+  glDisable(GL_BLEND);
 
   glutSwapBuffers();
 }
