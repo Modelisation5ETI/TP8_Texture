@@ -24,27 +24,27 @@ void main()
   vec3 view_dir = normalize(vf_tangent_view_pos - vf_tangent_frag_pos);
   vec2 tex_coords = vf_tex_coords;
 
-  // Pour le parallax mapping, il faudra adapter les coordonnées de texture
+  // Parallax mapping <=> texture coordinates shifting
   if( parallax_mapping )
-    { 
-    //TODO: Try dividing by z
+    {
+    // Get height from heightmap
     float texture_height = texture(height_tex, tex_coords).r;
-    
     vec3 view_dir_proj =  -view_dir * height_scale * texture_height;
-  
-    tex_coords = tex_coords + view_dir_proj.xy;
+    // Shift texture coordinates
+    tex_coords = tex_coords + view_dir_proj.xy/view_dir.z;
     }
     
-  // On laisse tomber les pixels qui sont en dehors de la texture (pour le parallax mapping)
+  // Discard out-of-bound pixels for parallax mapping
   if (tex_coords.x > 1.0 || tex_coords.y > 1.0 || tex_coords.x < 0.0 || tex_coords.y < 0.0)
     discard;
 
-  // Récupération de la normale depuis la normal map
+  // Get normal from normal map
   vec3 normal = texture(normal_tex, tex_coords).xyz;
   normal = normalize(normal * 2.0 - 1.0); // passe de 0->1 à -1->1
 
-  // Récupération de la couleur de base
+  // Get base color from texture
   vec3 base_color = texture(diffuse_tex, tex_coords).rgb;
+
   // Ambient
   vec3 ambient = 0.1 * base_color;
   // Diffuse
@@ -55,7 +55,7 @@ void main()
   vec3 reflect_dir = reflect(-light_dir, normal);
   vec3 halfway_dir = normalize(light_dir + view_dir);  
   float spec = pow(max(dot(normal, halfway_dir), 0.0), 32.0);
-
   vec3 specular = vec3(0.2) * spec;
+
   color = vec4(ambient + diffuse + specular, 1.0);
 }

@@ -23,11 +23,8 @@ static GLuint texture_height;
 
 vec3 light_pos(0.5f, 1.0f, 0.3f);
 
-// Camera
-//Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-
 GLboolean parallax_mapping = true;
-GLfloat height_scale = 0.1;
+GLfloat height_scale = 0.02;
 
 /*==========================================================================*\
  * init_quad                                                                *
@@ -81,12 +78,10 @@ static void init_quad()
   tangent2.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
   tangent2.normalize();
 
-
   bitangent2.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
   bitangent2.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
   bitangent2.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
   bitangent2.normalize();
-
 
   GLfloat vertices[] =
   {
