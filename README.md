@@ -47,7 +47,7 @@ qtcreator ../TP8_Texture
  Use arrow LEFT/RIGHT to rotate camera.
 
  - ### Caillou
- <img src="./Screenshots/caillou.png" alt="Caillou" width="200" height="200" />
+ <img src="./Screenshots/caillou_mouille.png" alt="Caillou" width="200" height="200" />
 
  ```
  ./Caillou
