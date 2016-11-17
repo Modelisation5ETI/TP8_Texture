@@ -200,7 +200,7 @@ static void keyboard_callback(unsigned char key, int, int)
     case 27:
       exit(0);
   }
-  glutPostRedisplay();
+//  glutPostRedisplay();
 }
 
 /*=========================================================================*\
@@ -219,7 +219,7 @@ static void special_callback(int key, int, int)
     case GLUT_KEY_DOWN:
       break;
   }
-  glutPostRedisplay();
+//  glutPostRedisplay();
 }
 
 /*=========================================================================*\
@@ -251,7 +251,7 @@ int main(int argc, char *argv[])
   glutSpecialFunc(special_callback);
 
   // Décommenter la ligne suivante pour une mise à jour automatique du rendu
-  // glutTimerFunc(25, timer_callback, 0);
+  glutTimerFunc(25, timer_callback, 0);
   glewExperimental=true; glewInit();glGetError();
 
   init();
