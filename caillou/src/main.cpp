@@ -15,22 +15,28 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*)nullptr + (bytes))
 
+// Window size
 static int width = 800, height = 600;
+
+// Ground
 static GLuint  ground_vao;
 static GLuint  ground_vbos[2];
 static Shader *ground_shader = nullptr;
-
+// Stone
 static GLuint  stone_vao;
 static GLuint  stone_vbos[2];
 static Shader *stone_shader = nullptr;
 static unsigned stone_nb_indices;
 static GLuint  stone_texture;
-
+// Caustics
 std::vector<GLuint> caustic_texture;
 unsigned int current_caustic=0;
 
 static float angle = 0;
 
+/*=========================================================================*\
+ * Load caustic textures                                                                    *
+\*=========================================================================*/
 void load_caustic_texture()
 {
 unsigned int nb_caustic = 32;
@@ -39,9 +45,8 @@ for (unsigned int i=0;i<nb_caustic;i++)
   std::string filename="caust";
   std::stringstream caustic;
   caustic<<i;
-  filename+=caustic.str()+".ppm";
-  std::cout<<filename<<std::endl;
-  caustic_texture.push_back(get_texture(filename));
+  filename += caustic.str()+".ppm";
+  caustic_texture.push_back( get_texture(filename) );
   }
 }
 
@@ -166,10 +171,9 @@ static void init()
     stone_shader->set("tex", 0);
     stone_shader->set("caustic_tex", 1);
     stone_texture = get_texture("stone.ppm");
-
-    load_caustic_texture();
-
   }
+
+  load_caustic_texture();
 }
 
 /*=========================================================================*\
@@ -179,7 +183,6 @@ static void display_callback()
 {
   matrix projection, view;
 
-  //projection.set_perspective(45, static_cast<float>(width) / height, 1, 1000);
   projection.set_perspective(15, static_cast<float>(width) / height, 1, 1000);
   view.set_look_at(vec3(-70, 40, -50), vec3(0,0,0), vec3(0,1,0));
   view.rotate(angle, vec3(0, 1, 0));
@@ -286,7 +289,7 @@ int main(int argc, char *argv[])
   glutKeyboardFunc(keyboard_callback);
   glutSpecialFunc(special_callback);
 
-  // Décommenter la ligne suivante pour une mise à jour automatique du rendu
+  // Mise à jour automatique du rendu
   glutTimerFunc(25, timer_callback, 0);
   glewExperimental=true; glewInit();glGetError();
 

@@ -18,6 +18,7 @@ void main(void)
   gl_Position = projection * vec4(position, 1.0);
   vf_position = position;
   
+  // Weighted normal for wetness
   vec3 weighted_normal = normal * normal;
   vf_normal = weighted_normal;
   
