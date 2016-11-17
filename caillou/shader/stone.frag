@@ -10,9 +10,9 @@ in float vf_light;
 
 out vec4 color;
 
-float ClampRange( float input, float min, float max )
+float ClampRange( float input0, float min, float max )
 {
-  return clamp((input-min)/(max-min),0,1);
+  return clamp((input0-min)/(max-min),0,1);
 }
 
 void main(void)
