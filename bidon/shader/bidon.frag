@@ -16,22 +16,18 @@ out vec4 color;
 
 void main(void)
 {
-  //
+  // Get different texture colors
   vec4 col1 = texture(decal_tex, vec2(0.65 - vf_tex_coords.x, vf_tex_coords.y));
   vec4 col2 = texture(rust_tex, vf_tex_coords);
   vec4 col3 = texture(brushed_tex, vf_tex_coords);
   
-  
-  //
-  // TODO: Illumination propre au matériau 
-  //  + position light fixe en appliquant la rot au mesh et pas a la view.
+  // Phong lightning on col1 (TODO:Implement different lightning properties for each material)
   vec3 lightPos = vec3( 0,0, -30.0f );
   vec3 cameraPos = vec3( 0.0f, 0.0f, 0.0f );
 
   vec3 t = normalize( cameraPos - vf_position );
   vec3 l = normalize( lightPos - vf_position );
   vec3 s = normalize(reflect( l, vf_normal ));
-  
   
   float Ka = 0.2f;
   float Kd = 0.8f;
@@ -44,14 +40,9 @@ void main(void)
 
   col1 = ( ambient + diffuse ) * col1 + specular * vec4( 1.0f, 1.0f, 1.0f, 1.0f );
   
-  
-  // Mix texture
+  // Mix texture according to a map
   vec4 map = texture(shader_map_tex, vf_tex_coords);
   vec4 textureColor = map.x * col1 + map.y * col3 + map.z * col2;
   
   color = textureColor;
-//   if (gl_FrontFacing)
-//     color = col1;
-//   else
-//     color = col1 / 2;
 }
